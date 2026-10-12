@@ -1,21 +1,21 @@
 import datetime
 
-PRIJS_TOEGANGSTICKET = 14.99
-PRIJS_GARDEROBE = 1.95
-PRIJS_PARKEREN = 9.99
-VASTE_KOSTEN = PRIJS_TOEGANGSTICKET + PRIJS_GARDEROBE + PRIJS_PARKEREN
-MIN_LEEFTIJD = 18
+PRICE_ENTREE = 14.99
+PRICE_WARDROBE = 1.95
+PRICE_PARKING = 9.99
+FIXED_COSTS = PRICE_ENTREE + PRICE_WARDROBE + PRICE_PARKING
+MIN_AGE = 18
 
-aanhef = ""
-voornaam = input("Wat is je voornaam?\n Voornaam: ").capitalize()
-achternaam = input("Wat is je achternaam?\n Achternaam: ").capitalize()
+salution = ""
+first_name = input("Wat is je voornaam?\n Voornaam: ").capitalize()
+surname = input("Wat is je achternaam?\n Achternaam: ").capitalize()
 
-geboortedatum = input("Wat is je geboortedatum?\n (dd-mm-yyyy): ")
-huidig_jaar = datetime.datetime.now().year
-geboorte_dag, geboorte_maand, geboorte_jaar = geboortedatum.split("-")
+birth_date = input("Wat is je geboortedatum?\n (dd-mm-yyyy): ")
+current_year = datetime.datetime.now().year
+birth_day, birth_month, birth_year = birth_date.split("-")
 
 
-if huidig_jaar - int(geboorte_jaar) < MIN_LEEFTIJD:
+if current_year - int(birth_year) < MIN_AGE:
     print()
     print("Helaas ben je te jong om deel te nemen aan Casino de Sluwe Kat.")
     print("Je moet minstens 18 jaar oud zijn.")
@@ -23,57 +23,57 @@ if huidig_jaar - int(geboorte_jaar) < MIN_LEEFTIJD:
     print("Bedankt voor je begrip!")
     exit(1)
 
-geslacht = input("Wat is je geslacht?\n Man / Vrouw / Anders: ").lower()
-startbudget = float(input("Wat is je startbudget in euro's?\n Startbudget: "))
-saldo = startbudget - VASTE_KOSTEN
-inzet = 0
+gender = input("Wat is je geslacht?\n Man / Vrouw / Anders: ").lower()
+start_budget = float(input("Wat is je startbudget in euro's?\n Startbudget: "))
+balance = start_budget - FIXED_COSTS
+bet = 0
 round_number = 1
 
-conclusie_saldo = ""
+balance_conclusion = ""
 
-if geslacht == "man":
-    aanhef = f"meneer {achternaam}"
+if gender == "man":
+    salution = f"meneer {surname}"
 
-elif geslacht == "vrouw":
-    aanhef = f"mevrouw {achternaam}"
-
-else:
-    aanhef = f"{voornaam} {achternaam}"
-
-if saldo >= 0:
-    conclusie_saldo = "Je hebt voldoende budget voor toegang tot het casino."
+elif gender == "vrouw":
+    salution = f"mevrouw {surname}"
 
 else:
-    conclusie_saldo = "Je hebt onvoldoende budget voor toegang tot het casino."
+    salution = f"{first_name} {surname}"
+
+if balance >= 0:
+    balance_conclusion = "Je hebt voldoende budget voor toegang tot het casino."
+
+else:
+    balance_conclusion = "Je hebt onvoldoende budget voor toegang tot het casino."
 
 print()
 print("-" * 20)
 print("Casino de Sluwe Kat")
 print("-" * 20)
-print(f"Welkom, {aanhef}!")
+print(f"Welkom, {salution}!")
 print()
-print(f"Startbudget:    € {startbudget:.2f}")
-print(f"Vaste kosten:   € {VASTE_KOSTEN:.2f}")
-print(f"Saldo:          € {saldo:.2f}")
+print(f"Startbudget:    € {start_budget:.2f}")
+print(f"Vaste kosten:   € {FIXED_COSTS:.2f}")
+print(f"Saldo:          € {balance:.2f}")
 print()
-print(conclusie_saldo)
+print(balance_conclusion)
 
 while True:
     print("Kies één van de volgende opties:")
     print("1. rood \n2. zwart \n3. even \n4. oneven \n0. stop")
     print()
-    roulette_keuze = input("Kies je gok! (0 om te stoppen):")
+    roulette_choice = input("Kies je gok! (0 om te stoppen):")
     print()
 
     spin = (round_number * 7) % 37
     round_number += 1
 
-    if roulette_keuze == '0':
+    if roulette_choice == '0':
         print('Bedankt voor het spelen!')
         break
 
     else:
-        match roulette_keuze:
+        match roulette_choice:
             case '1':
                 print('Je hebt gekozen voor rood.')
             case '2':
@@ -88,62 +88,62 @@ while True:
                 continue
 
         # Check inzet
-        inzet = float(input(f'Huidig saldo = €{saldo}\nHoeveel euro wil je inzetten?: '))
+        bet = float(input(f'Huidig saldo = €{balance}\nHoeveel euro wil je inzetten?: '))
 
-        if inzet <= 0:
+        if bet <= 0:
             print('Inzet is ongeldig. Spel wordt opnieuw gestart...')
             print()
             continue
-        elif inzet > saldo:
+        elif bet > balance:
             print('Onvoldoende saldo. Spel wordt opnieuw gestart...')
             print()
             continue
         else:
-            saldo -= inzet
+            balance -= bet
 
         # Check kleur
         if spin == 0:
-            kleur = 'groen'
-            even_oneven = 'geen'
+            color = 'groen'
+            odd_even = 'geen'
 
         elif spin <= 18:
             if spin % 2 == 0:
-                kleur = 'zwart'
-                even_oneven = 'even'
+                color = 'zwart'
+                odd_even = 'even'
             else:
-                kleur = 'rood'
-                even_oneven = 'oneven'
+                color = 'rood'
+                odd_even = 'oneven'
 
         else:
             if spin % 2 == 0:
-                kleur = 'rood'
-                even_oneven = 'even'
+                color = 'rood'
+                odd_even = 'even'
             else:
-                kleur = 'rood'
-                even_oneven = 'oneven'
+                color = 'rood'
+                odd_even = 'oneven'
 
         # Check uitslag
         win = False
-        if roulette_keuze == '1' and kleur == 'rood':
+        if roulette_choice == '1' and color == 'rood':
             win = True
-        elif roulette_keuze == '2' and kleur == 'zwart':
+        elif roulette_choice == '2' and color == 'zwart':
             win = True
-        elif roulette_keuze == '3' and even_oneven == 'even':
+        elif roulette_choice == '3' and odd_even == 'even':
             win = True
-        elif roulette_keuze == '4' and even_oneven == 'oneven':
+        elif roulette_choice == '4' and odd_even == 'oneven':
             win = True
 
         # Print uitslag
-        print(f'De bal valt op {kleur} ({spin})')
+        print(f'De bal valt op {color} ({spin})')
 
         if win == True:
-            print(f'Gewonnen! Je wint €{inzet}.')
-            saldo = saldo + inzet * 2
+            print(f'Gewonnen! Je wint €{bet}.')
+            balance = balance + bet * 2
         else:
-            print(f'Helaas... Je verliest je inzet van €{inzet}.')
+            print(f'Helaas... Je verliest je inzet van €{bet}.')
 
         print()
-        print(f'Huidig saldo = €{saldo:.2f}')
+        print(f'Huidig saldo = €{balance:.2f}')
         print()
         continue
 
