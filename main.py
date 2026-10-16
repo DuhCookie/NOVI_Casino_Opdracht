@@ -1,59 +1,156 @@
 import datetime
+from Games.roulette import play_roulette
+from Games.fruitmachine import play_fruitmachine
 
-PRIJS_TOEGANGSTICKET = 14.99
-PRIJS_GARDEROBE = 1.95
-PRIJS_PARKEREN = 9.99
-VASTE_KOSTEN = PRIJS_TOEGANGSTICKET + PRIJS_GARDEROBE + PRIJS_PARKEREN
-MIN_LEEFTIJD = 18
+PRICE_ENTREE = 14.99
+PRICE_WARDROBE = 1.95
+PRICE_PARKING = 9.99
+FIXED_COSTS = PRICE_ENTREE + PRICE_WARDROBE + PRICE_PARKING
+MIN_AGE = 18
 
-aanhef = ""
-voornaam = input("Wat is je voornaam?\n Voornaam: ").capitalize()
-achternaam = input("Wat is je achternaam?\n Achternaam: ").capitalize()
+def calculate_age(birth_date):
+    current_year = datetime.datetime.now().year
+    birth_day, birth_month, birth_year = birth_date.split("-")
+    return current_year - int(birth_year)
 
-geboortedatum = input("Wat is je geboortedatum?\n (dd-mm-yyyy): ")
-huidig_jaar = datetime.datetime.now().year
-geboorte_dag, geboorte_maand, geboorte_jaar = geboortedatum.split("-")
+def check_age(birth_date):
+    if calculate_age(birth_date) < MIN_AGE:
+        print()
+        print("Helaas ben je te jong om deel te nemen aan Casino de Sluwe Kat.")
+        print("Je moet minstens 18 jaar oud zijn.")
+        print()
+        print("Bedankt voor je begrip!")
+        exit(1)
+    else:
+        return birth_date
 
-if huidig_jaar - int(geboorte_jaar) < MIN_LEEFTIJD:
+def determine_salutation(first_name, surname, gender):
+    if gender == "man":
+        salutation = f"meneer {surname}"
+
+    elif gender == "vrouw":
+        salutation = f"mevrouw {surname}"
+
+    else:
+        salutation = f"{first_name} {surname}"
+
+    return salutation
+
+def show_welcome_message(start_budget, balance, salutation):
     print()
-    print("Helaas ben je te jong om deel te nemen aan Casino de Sluwe Kat.")
-    print("Je moet minstens 18 jaar oud zijn.")
+    print("-" * 20)
+    print("Casino de Sluwe Kat")
+    print("-" * 20)
+    print(f"Welkom, {salutation}!")
     print()
-    print("Bedankt voor je begrip!")
-    exit(1)
+    print(f"Startbudget:    € {start_budget:.2f}")
+    print(f"Vaste kosten:   € {FIXED_COSTS:.2f}")
+    print(f"Saldo:          € {balance:.2f}")
+    print()
 
-geslacht = input("Wat is je geslacht?\n Man / Vrouw / Anders: ").lower()
-startbudget = float(input("Wat is je startbudget in euro's?\n Startbudget: "))
+    if balance <= 0:
+        print("Je hebt onvoldoende budget voor toegang tot het casino.")
+        exit(1)
+    else:
+        print("Je hebt voldoende budget voor toegang tot het casino.")
 
-saldo = startbudget - VASTE_KOSTEN
-conclusie_saldo = ""
+def menu_header(title):
+    print()
+    print("-" * 10)
+    print(title)
+    print("-" * 10)
+    print()
 
-if geslacht == "man":
-    aanhef = f"meneer {achternaam}"
+def show_main_menu():
+    menu_header('HOOFDMENU')
+    print("1. Spellen \n2. Saldo \n3. Account \n0. Stop")
+    print()
 
-elif geslacht == "vrouw":
-    aanhef = f"mevrouw {achternaam}"
+def show_game_menu():
+    menu_header('SPELLEN')
+    print("1. Fruitmachine \n2. Roulette \n0. Terug")
+    print()
 
-else:
-    aanhef = f"{voornaam} {achternaam}"
+def show_balance(balance):
+    menu_header('SALDO')
+    print(f"Huidig saldo: € {balance:.2f}")
+    print()
+    print("0. Terug")
+    print()
 
-if saldo >= 0:
-    conclusie_saldo = "Je hebt voldoende budget voor toegang tot het casino."
+def show_account(first_name, surname, gender, birth_date):
+    menu_header('ACCOUNT')
+    print(f'Naam: {first_name} {surname}')
+    print(f'Geslacht: {gender.capitalize()}')
+    print(f'Geboortedatum: {birth_date}')
+    print(f'Leeftijd: {calculate_age(birth_date)}')
+    print()
+    print("0. Terug")
+    print()
 
-else:
-    conclusie_saldo = "Je hebt onvoldoende budget voor toegang tot het casino."
+def main():
+    first_name = input("Wat is je voornaam?\n Voornaam: ").capitalize()
+    surname = input("Wat is je achternaam?\n Achternaam: ").capitalize()
+    birth_date = check_age(input("Wat is je geboortedatum?\n (dd-mm-yyyy): "))
+    gender = input("Wat is je geslacht?\n Man / Vrouw / Anders: ").lower()
+    start_budget = float(input("Wat is je startbudget in euro's?\n Startbudget: "))
 
-print()
-print("-" * 20)
-print("Casino de Sluwe Kat")
-print("-" * 20)
-print(f"Welkom, {aanhef}!")
-print()
-print(f"Startbudget:    € {startbudget:.2f}")
-print(f"Vaste kosten:   € {VASTE_KOSTEN:.2f}")
-print(f"Saldo:          € {saldo:.2f}")
-print()
-print(conclusie_saldo)
+    salutation = determine_salutation(first_name, surname, gender)
+
+    balance = start_budget - FIXED_COSTS
+    show_welcome_message(start_budget, balance, salutation)
+
+    while True:
+        show_main_menu()
+        menu_choice = input("Voer het nummer van je keuze in: ")
+
+        match menu_choice:
+            case '1':
+                show_game_menu()
+                game_choice = input('Voer het nummer van je keuze in: ')
+
+                if game_choice == '1':
+                    menu_header('FRUITMACHINE')
+                    balance = play_fruitmachine(balance)
+
+                elif game_choice == '2':
+                    menu_header('ROULETTE')
+                    balance = play_roulette(balance)
+
+                elif game_choice == '0':
+                    continue
+
+                else:
+                    print('Ongeldige keuze')
+                    continue
+
+            case '2':
+                show_balance(balance)
+                balance_choice = input('Voer het nummer van je keuze in: ')
+
+                if balance_choice == '0':
+                    continue
+
+            case '3':
+                show_account(first_name, surname, gender, birth_date)
+                account_choice = input('Voer het nummer van je keuze in: ')
+
+                if account_choice == '0':
+                    continue
+
+            case '0':
+                print()
+                print('Bedankt voor het spelen!')
+                break
+            case _:
+                print()
+                print('Ongeldige keuze.')
+                continue
+
+    print(f"Eindsaldo: € {balance:.2f}")
+
+main()
+
 
 
 
