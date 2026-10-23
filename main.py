@@ -1,6 +1,7 @@
 import datetime
 from Games.roulette import play_roulette
 from Games.fruitmachine import play_fruitmachine
+from Games.blackjack import play_blackjack
 
 PRICE_ENTREE = 14.99
 PRICE_WARDROBE = 1.95
@@ -68,7 +69,7 @@ def show_main_menu():
 
 def show_game_menu():
     menu_header('SPELLEN')
-    print("1. Fruitmachine \n2. Roulette \n0. Terug")
+    print("1. Fruitmachine \n2. Roulette \n3. Blackjack \n0. Terug")
     print()
 
 def show_balance(balance):
@@ -116,6 +117,10 @@ def main():
                 elif game_choice == '2':
                     menu_header('ROULETTE')
                     balance = play_roulette(balance)
+
+                elif game_choice == '3':
+                    menu_header('BLACKJACK')
+                    balance = play_blackjack(balance)
 
                 elif game_choice == '0':
                     continue

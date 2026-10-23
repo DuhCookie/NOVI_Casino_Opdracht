@@ -1,5 +1,5 @@
 import random
-from Games.roulette import ask_for_bet
+from Games.helper import ask_for_bet
 
 def generate_slots():
     """
